@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 # Load your dataset (change 'your_dataset.csv' to your file's name)
-@st.cache(persist=True)
+@st.cache
 def load_data():
     data = pd.read_csv('rice.prices.csv')
     return data
