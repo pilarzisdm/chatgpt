@@ -12,7 +12,7 @@ def load_data():
 
 data = load_data()
 
-st.title('Market Price Forecasting App')
+st.title('Forecasting Market Price Web by Idlakun')
 
 # Sidebar
 st.sidebar.header('Data Settings')
