@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+import io
 
 # Load your dataset (change 'your_dataset.csv' to your file's name)
 @st.cache_data
@@ -12,7 +13,7 @@ def load_data():
 
 data = load_data()
 
-st.title('Forecasting Market Price Web by Idlakun')
+st.title('Market Price Forecasting App')
 
 # Sidebar
 st.sidebar.header('Data Settings')
@@ -47,8 +48,16 @@ else:
     st.write(f"R-squared: {r2}")
 
     # Plot the actual vs. predicted prices
-    st.subheader('Actual vs. Predicted Prices')
-    st.pyplot(plt.scatter(y_test, predictions))
+    fig, ax = plt.subplots()
+    ax.scatter(y_test, predictions)
+    ax.set_xlabel("Actual Price")
+    ax.set_ylabel("Predicted Price")
+    ax.set_title("Actual vs. Predicted Prices")
+
+    # Save the plot to a BytesIO object
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format='png')
+    st.image(img_buf)
 
     # Market Price Forecast
     st.subheader('Market Price Forecast')
