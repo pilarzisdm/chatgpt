@@ -62,8 +62,15 @@ else:
     # Market Price Forecast
     st.subheader('Market Price Forecast')
     user_input = st.text_input('Enter feature values separated by commas')
-    user_input = [float(x.strip()) for x in user_input.split(',')]  # Convert to a list of floats
 
-    if len(user_input) == len(features):
-        forecast = model.predict([user_input])
-        st.write(f"Forecasted Price: {forecast[0]}")
+    if user_input:
+        try:
+            user_input = [float(x.strip()) for x in user_input.split(',')]  # Convert to a list of floats
+            if len(user_input) == len(features):
+                forecast = model.predict([user_input])
+                st.write(f"Forecasted Price: {forecast[0]}")
+            else:
+                st.warning(f"Please provide {len(features)} feature values.")
+        except ValueError:
+            st.warning("Invalid input. Please enter numeric values separated by commas.")
+
