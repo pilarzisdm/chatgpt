@@ -39,7 +39,7 @@ if len(commodities) > 0:
         granularity_multiplier = 365  # Approximate number of days in a year
 
     # Filter data for the selected granularity
-    filtered_data = selected_data[selected_data['Tanggal'] >= (selected_data['Tanggal'].max() - pd.DateOffset(days=granularity_multiplier))
+    filtered_data = selected_data[selected_data['Tanggal'] >= (selected_data['Tanggal'].max() - pd.DateOffset(days=granularity_multiplier))]
 
     # Plot selected commodities with the selected granularity
     st.subheader("Grafik Harga Komoditas")
