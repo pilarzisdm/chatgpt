@@ -9,11 +9,11 @@ def load_data():
     return data
 
 # Sidebar: Select commodities
-st.sidebar.title("Select Commodities")
-commodities = st.sidebar.multiselect("Select one or more commodities", ["Beras", "Daging Ayam", "Telur Ayam", "Cabai Merah", "Cabai Rawit"])
+st.sidebar.title("Pilih Komoditas")
+commodities = st.sidebar.multiselect("Pilih satu atau lebih komoditas", ["Beras", "Daging Ayam", "Telur Ayam", "Cabai Merah", "Cabai Rawit"])
 
 # Main content
-st.title("Daily Commodity Price Forecasting")
+st.title("Peramalan Harga Komoditas Harian")
 
 # Load data
 data = load_data()
@@ -23,29 +23,29 @@ if len(commodities) > 0:
     selected_data = data[['Tanggal'] + commodities]
     selected_data = selected_data.sort_values(by='Tanggal', ascending=False)
     
-    st.subheader("Commodity Prices")
+    st.subheader("Harga Komoditas")
     st.write(selected_data.set_index('Tanggal'))
 
     # Plot selected commodities
-    st.subheader("Commodity Price Chart")
+    st.subheader("Grafik Harga Komoditas")
     fig, ax = plt.subplots(figsize=(10, 5))
     
     for commodity in commodities:
         ax.plot(selected_data['Tanggal'], selected_data[commodity], label=commodity)
 
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Price")
-    ax.set_title("Commodity Prices Over Time")
+    ax.set_xlabel("Tanggal")
+    ax.set_ylabel("Harga")
+    ax.set_title("Harga Komoditas Antar Waktu")
     ax.legend()
     st.pyplot(fig)
     
     # Forecasting period
-    st.subheader("Commodity Price Forecasting")
-    forecasting_period = st.number_input("Enter the forecasting period (in days):", min_value=1, step=1)
+    st.subheader("Peramalan Harga Komoditas")
+    forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
     if st.button("Forecast"):
         # Perform your forecasting calculations here using the selected commodities and the forecasting period
-        st.write(f"Forecasting for the next {forecasting_period} days for selected commodities")
+        st.write(f"Permalan {forecasting_period} hari untuk komoditas terpilih")
 
 else:
-    st.warning("Please select one or more commodities from the sidebar.")
+    st.warning("Silakan pilih satu atau lebih komoditas.")
 
