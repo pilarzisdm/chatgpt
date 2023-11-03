@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from fbprophet import Prophet
 
 # Load the CSV data
 @st.cache_data
@@ -25,6 +26,7 @@ if len(commodities) > 0:
     selected_data = selected_data.sort_values(by='Tanggal', ascending=False)
 
     st.subheader("Harga Komoditas")
+    selected_data['Tanggal'] = selected_data['Tanggal'].dt.date  # Extract date portion
     st.write(selected_data.set_index('Tanggal'))
 
     # Add select box for granularity just for the plot
@@ -43,6 +45,7 @@ if len(commodities) > 0:
     min_date = max_date - granularity_multiplier
 
     # Filter data for the selected granularity
+    min_date = pd.Timestamp(min_date)  # Convert to Timestamp
     filtered_data = selected_data[selected_data['Tanggal'] >= min_date]
 
     # Plot selected commodities with the selected granularity
@@ -63,8 +66,22 @@ if len(commodities) > 0:
     st.subheader("Peramalan Harga Komoditas")
     forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
     if st.button("Forecast"):
-        # Perform your forecasting calculations here using the selected commodities and the forecasting period
-        st.write(f"Peramalan {forecasting_period} hari untuk komoditas terpilih")
+        # Perform time series forecasting using Prophet
+        forecast_data = selected_data[['Tanggal', 'Beras']].rename(columns={'Tanggal': 'ds', 'Beras': 'y'})
+
+        # Create and fit the Prophet model
+        model = Prophet()
+        model.fit(forecast_data)
+
+        # Create a dataframe for future dates
+        future = model.make_future_dataframe(periods=forecasting_period)
+        
+        # Make predictions
+        forecast = model.predict(future)
+
+        # Display the forecasted data
+        st.subheader("Hasil Peramalan")
+        st.write(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
