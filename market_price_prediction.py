@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Load the CSV data
 @st.cache_data
@@ -59,6 +60,24 @@ if len(commodities) > 0:
     ax.legend()
 
     st.pyplot(fig)
+
+    # Forecasting period for selected commodities
+    st.subheader("Peramalan Harga Komoditas")
+    forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
+
+    if st.button("Forecast"):
+        # Perform simple moving average forecasting for each selected commodity
+        forecast_data = resampled_data.copy()
+
+        for commodity in commodities:
+            forecast_data[commodity + ' (Forecast)'] = forecast_data[commodity].rolling(window=7).mean()
+
+        # Filter the forecast for the selected period
+        forecast_data = forecast_data.tail(forecasting_period)
+
+        # Display the forecasted data
+        st.subheader("Hasil Peramalan")
+        st.write(forecast_data)
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
