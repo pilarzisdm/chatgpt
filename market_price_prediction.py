@@ -44,8 +44,10 @@ if len(commodities) > 0:
     max_date = selected_data['Tanggal'].max()
     min_date = max_date - granularity_multiplier
 
+    # Convert min_date to a Timestamp
+    min_date = pd.Timestamp(min_date)
+
     # Filter data for the selected granularity
-    min_date = pd.Timestamp(min_date)  # Convert to Timestamp
     filtered_data = selected_data[selected_data['Tanggal'] >= min_date]
 
     # Plot selected commodities with the selected granularity
