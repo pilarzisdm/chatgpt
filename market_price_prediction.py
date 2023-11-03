@@ -27,25 +27,25 @@ if len(commodities) > 0:
     st.subheader("Harga Komoditas")
     st.write(selected_data.set_index('Tanggal'))
 
-    # Add select box for granularity
-    granularity = st.selectbox("Pilih Granularitas Tanggal", ["Harian", "Mingguan", "Bulanan", "Tahunan"])
+    # Add select box for granularity just for the plot
+    granularity = st.selectbox("Pilih Granularitas Tanggal untuk Grafik", ["Mingguan", "Bulanan", "Tahunan"])
 
     # Determine granularity multiplier
-    if granularity == "Harian":
-        granularity_multiplier = 1
-    elif granularity == "Mingguan":
+    if granularity == "Mingguan":
         granularity_multiplier = 7
     elif granularity == "Bulanan":
         granularity_multiplier = 30  # Approximate number of days in a month
     else:
         granularity_multiplier = 365  # Approximate number of days in a year
 
+    # Filter data for the selected granularity
+    filtered_data = selected_data[selected_data['Tanggal'] >= (selected_data['Tanggal'].max() - pd.DateOffset(days=granularity_multiplier))
+
     # Plot selected commodities with the selected granularity
     st.subheader("Grafik Harga Komoditas")
     fig, ax = plt.subplots(figsize=(10, 5))
 
     for commodity in commodities:
-        filtered_data = selected_data[selected_data['Tanggal'] >= (selected_data['Tanggal'].max() - pd.DateOffset(days=granularity_multiplier))]
         ax.plot(filtered_data['Tanggal'], filtered_data[commodity], label=commodity)
 
     ax.set_xlabel("Tanggal")
