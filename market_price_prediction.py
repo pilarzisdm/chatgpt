@@ -27,12 +27,12 @@ if len(commodities) > 0:
     # Plot selected commodities
     st.subheader("Commodity Price Chart")
     for commodity in commodities:
-        plt.figure(figsize=(10, 5))
-        plt.plot(selected_data['Tanggal'], selected_data[commodity])
-        plt.xlabel("Date")
-        plt.ylabel("Price")
-        plt.title(f"{commodity} Price Over Time")
-        st.pyplot()
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.plot(selected_data['Tanggal'], selected_data[commodity])
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price")
+        ax.set_title(f"{commodity} Price Over Time")
+        st.pyplot(fig)
 
     # Forecasting period
     st.subheader("Commodity Price Forecasting")
