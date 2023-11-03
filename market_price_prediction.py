@@ -6,12 +6,15 @@ import matplotlib.pyplot as plt
 @st.cache_data
 def load_data():
     data = pd.read_csv("harga_real.csv")
-    data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
+    #data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
     return data
 
 # Sidebar: Select commodities
 st.sidebar.title("Pilih Komoditas")
 commodities = st.sidebar.multiselect("Pilih satu atau lebih komoditas", ["Beras", "Daging Ayam", "Telur Ayam", "Cabai Merah", "Cabai Rawit"])
+
+# Date range granularity options
+granularity = st.sidebar.selectbox("Pilih Granularitas Tanggal", ["Harian", "Mingguan", "Bulanan", "Tahunan"])
 
 # Main content
 st.title("Peramalan Harga Komoditas Harian")
@@ -39,10 +42,30 @@ if len(commodities) > 0:
     ax.set_title("Harga Komoditas Antar Waktu")
     ax.legend()
     
-    # Add slider for x-axis limits using the DataFrame index
-    x_min_idx, x_max_idx = st.slider("Pilih Rentang Tanggal", 0, len(selected_data) - 1, (0, len(selected_data) - 1))
-    x_min = selected_data['Tanggal'].iloc[x_min_idx]
-    x_max = selected_data['Tanggal'].iloc[x_max_idx]
+    # Determine granularity multiplier
+    if granularity == "Harian":
+        granularity_multiplier = 1
+    elif granularity == "Mingguan":
+        granularity_multiplier = 7
+    elif granularity == "Bulanan":
+        granularity_multiplier = 30  # Approximate number of days in a month
+    else:
+        granularity_multiplier = 365  # Approximate number of days in a year
+    
+    # Calculate slider limits
+    min_date = selected_data['Tanggal'].min()
+    max_date = selected_data['Tanggal'].max()
+    x_min = st.date_input("Pilih Rentang Tanggal Awal", min_date, min_date, max_date - pd.DateOffset(days=1))
+    x_max = st.date_input("Pilih Rentang Tanggal Akhir", min_date + pd.DateOffset(days=granularity_multiplier), min_date, max_date)
+    
+    # Filter data based on the selected date range
+    filtered_data = selected_data[(selected_data['Tanggal'] >= x_min) & (selected_data['Tanggal'] <= x_max)]
+    
+    # Update the plot with the filtered data
+    for commodity in commodities:
+        ax.plot(filtered_data['Tanggal'], filtered_data[commodity], label=commodity)
+    
+    # Set x-axis limits
     ax.set_xlim(x_min, x_max)
     
     st.pyplot(fig)
