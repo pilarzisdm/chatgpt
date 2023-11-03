@@ -3,9 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the CSV data
-@st.cache_data
+@st.cache
 def load_data():
-    data = pd.read_csv("harga_real.csv")
+    data = pd.read_csv("harga.csv")
     return data
 
 # Sidebar: Select commodities
@@ -38,7 +38,7 @@ if len(commodities) > 0:
     ax.set_title("Harga Komoditas Antar Waktu")
     ax.legend()
     
-     # Add slider for x-axis limits
+    # Add slider for x-axis limits
     x_min, x_max = st.slider("Pilih Rentang Tanggal", min(selected_data['Tanggal']), max(selected_data['Tanggal']), (min(selected_data['Tanggal']), max(selected_data['Tanggal'])))
     ax.set_xlim(x_min, x_max)
     
@@ -49,7 +49,7 @@ if len(commodities) > 0:
     forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
     if st.button("Forecast"):
         # Perform your forecasting calculations here using the selected commodities and the forecasting period
-        st.write(f"Permalan {forecasting_period} hari untuk komoditas terpilih")
+        st.write(f"Peramalan {forecasting_period} hari untuk komoditas terpilih")
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
