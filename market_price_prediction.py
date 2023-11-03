@@ -37,6 +37,11 @@ if len(commodities) > 0:
     ax.set_ylabel("Harga")
     ax.set_title("Harga Komoditas Antar Waktu")
     ax.legend()
+    
+     # Add slider for x-axis limits
+    x_min, x_max = st.slider("Pilih Rentang Tanggal", min(selected_data['Tanggal']), max(selected_data['Tanggal']), (min(selected_data['Tanggal']), max(selected_data['Tanggal'])))
+    ax.set_xlim(x_min, x_max)
+    
     st.pyplot(fig)
     
     # Forecasting period
