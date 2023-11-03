@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Load the CSV data
 @st.cache_data
@@ -30,25 +29,18 @@ if len(commodities) > 0:
     st.write(selected_data.set_index('Tanggal'))
 
     # Add select box for granularity just for the plot
-    granularity = st.selectbox("Pilih Granularitas Tanggal untuk Grafik", ["Mingguan", "Bulanan", "Tahunan"])
+    granularity = st.selectbox("Pilih Granularitas Tanggal untuk Grafik", ["Harian", "Mingguan", "Bulanan"])
 
-    # Determine granularity multiplier
+    # Determine granularity interval
     if granularity == "Mingguan":
-        granularity_multiplier = pd.DateOffset(weeks=1)
+        granularity_interval = 'W'
     elif granularity == "Bulanan":
-        granularity_multiplier = pd.DateOffset(months=1)
+        granularity_interval = 'M'
     else:
-        granularity_multiplier = pd.DateOffset(years=1)
-
-    # Calculate the date range for the selected granularity
-    max_date = selected_data['Tanggal'].max()
-    min_date = max_date - granularity_multiplier
-
-    # Convert min_date to a Timestamp
-    min_date = pd.Timestamp(min_date)
+        granularity_interval = 'D'
 
     # Filter data for the selected granularity
-    filtered_data = selected_data[selected_data['Tanggal'].apply(lambda x: x.date()) >= min_date.date()]
+    filtered_data = selected_data.set_index('Tanggal').resample(granularity_interval).last().reset_index()
 
     # Plot selected commodities with the selected granularity
     st.subheader("Grafik Harga Komoditas")
@@ -63,21 +55,6 @@ if len(commodities) > 0:
     ax.legend()
 
     st.pyplot(fig)
-
-    # Forecasting period
-    st.subheader("Peramalan Harga Komoditas")
-    forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
-    if st.button("Forecast"):
-        # Perform simple moving average forecasting
-        forecast_data = filtered_data[['Tanggal'] + commodities]
-        
-        # Calculate the moving average for each selected commodity
-        for commodity in commodities:
-            forecast_data[commodity + ' (Forecast)'] = forecast_data[commodity].rolling(window=7).mean()
-        
-        # Display the forecasted data
-        st.subheader("Hasil Peramalan")
-        st.write(forecast_data)
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
