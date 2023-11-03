@@ -39,15 +39,19 @@ if len(commodities) > 0:
     else:
         granularity_interval = 'D'
 
-    # Filter data for the selected granularity
-    filtered_data = selected_data.set_index('Tanggal').resample(granularity_interval).last().reset_index()
+    # Convert the index to DatetimeIndex
+    selected_data['Tanggal'] = pd.to_datetime(selected_data['Tanggal'])
+    selected_data.set_index('Tanggal', inplace=True)
+
+    # Resample data for the selected granularity
+    resampled_data = selected_data.resample(granularity_interval).last()
 
     # Plot selected commodities with the selected granularity
     st.subheader("Grafik Harga Komoditas")
     fig, ax = plt.subplots(figsize=(10, 5))
 
     for commodity in commodities:
-        ax.plot(filtered_data['Tanggal'], filtered_data[commodity], label=commodity)
+        ax.plot(resampled_data.index, resampled_data[commodity], label=commodity)
 
     ax.set_xlabel("Tanggal")
     ax.set_ylabel("Harga")
