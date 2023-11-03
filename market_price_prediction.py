@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Load the CSV data
-@st.cache
+@st.cache_data
 def load_data():
     data = pd.read_csv("harga_real.csv")
     data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
