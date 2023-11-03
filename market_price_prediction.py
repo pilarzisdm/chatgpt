@@ -21,6 +21,8 @@ data = load_data()
 if len(commodities) > 0:
     # Filter data based on selected commodities
     selected_data = data[['Tanggal'] + commodities]
+    selected_data = selected_data.sort_values(by='Tanggal', ascending=False)
+    
     st.subheader("Commodity Prices")
     st.write(selected_data.set_index('Tanggal'))
 
