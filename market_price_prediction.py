@@ -55,4 +55,17 @@ if len(commodities) > 0:
 
     ax.set_xlabel("Tanggal")
     ax.set_ylabel("Harga")
-    ax.set_title("Harga Komoditas Antar
+    ax.set_title("Harga Komoditas Antar Waktu")
+    ax.legend()
+
+    st.pyplot(fig)
+
+    # Forecasting period
+    st.subheader("Peramalan Harga Komoditas")
+    forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
+    if st.button("Forecast"):
+        # Perform your forecasting calculations here using the selected commodities and the forecasting period
+        st.write(f"Peramalan {forecasting_period} hari untuk komoditas terpilih")
+
+else:
+    st.warning("Silakan pilih satu atau lebih komoditas.")
