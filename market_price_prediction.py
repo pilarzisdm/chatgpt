@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the CSV data
-@st.cache_data
+@st.cache
 def load_data():
     data = pd.read_csv("harga_real.csv")
     data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
@@ -25,6 +25,7 @@ if len(commodities) > 0:
     selected_data = selected_data.sort_values(by='Tanggal', ascending=False)
 
     st.subheader("Harga Komoditas")
+    selected_data['Tanggal'] = selected_data['Tanggal'].dt.date  # Extract date portion
     st.write(selected_data.set_index('Tanggal'))
 
     # Add select box for granularity just for the plot
@@ -54,17 +55,4 @@ if len(commodities) > 0:
 
     ax.set_xlabel("Tanggal")
     ax.set_ylabel("Harga")
-    ax.set_title("Harga Komoditas Antar Waktu")
-    ax.legend()
-
-    st.pyplot(fig)
-
-    # Forecasting period
-    st.subheader("Peramalan Harga Komoditas")
-    forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
-    if st.button("Forecast"):
-        # Perform your forecasting calculations here using the selected commodities and the forecasting period
-        st.write(f"Peramalan {forecasting_period} hari untuk komoditas terpilih")
-
-else:
-    st.warning("Silakan pilih satu atau lebih komoditas.")
+    ax.set_title("Harga Komoditas Antar
