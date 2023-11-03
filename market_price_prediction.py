@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the CSV data
-@st.cache_data
+@st.cache
 def load_data():
     data = pd.read_csv("harga_real.csv")
     data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
@@ -44,6 +44,7 @@ if len(commodities) > 0:
     min_date = max_date - granularity_multiplier
 
     # Filter data for the selected granularity
+    min_date = pd.Timestamp(min_date)  # Convert to Timestamp
     filtered_data = selected_data[selected_data['Tanggal'] >= min_date]
 
     # Plot selected commodities with the selected granularity
