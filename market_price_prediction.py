@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Load the CSV data
 @st.cache_data
 def load_data():
-    data = pd.read_csv("harga.csv")
+    data = pd.read_csv("harga_real.csv")
     return data
 
 # Sidebar: Select commodities
@@ -48,4 +48,3 @@ if len(commodities) > 0:
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
-
