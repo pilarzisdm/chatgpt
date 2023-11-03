@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the CSV data
-@st.cache_data
+@st.cache
 def load_data():
     data = pd.read_csv("harga_real.csv")
     data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
@@ -41,7 +41,7 @@ if len(commodities) > 0:
     
     # Add slider for x-axis limits
     x_min, x_max = st.slider("Pilih Rentang Tanggal", min(selected_data['Tanggal']), max(selected_data['Tanggal']), (min(selected_data['Tanggal']), max(selected_data['Tanggal'])))
-    ax.set_xlim(x_min, x_max)
+    ax.set_xlim(pd.Timestamp(x_min), pd.Timestamp(x_max))  # Parse the limits as Timestamp objects
     
     st.pyplot(fig)
     
