@@ -20,15 +20,15 @@ data = load_data()
 
 if len(commodities) > 0:
     # Filter data based on selected commodities
-    selected_data = data[['date'] + commodities]
+    selected_data = data[['Tanggal'] + commodities]
     st.subheader("Commodity Prices")
-    st.write(selected_data.set_index('date'))
+    st.write(selected_data.set_index('Tanggal'))
 
     # Plot selected commodities
     st.subheader("Commodity Price Chart")
     for commodity in commodities:
         plt.figure(figsize=(10, 5))
-        plt.plot(selected_data['date'], selected_data[commodity])
+        plt.plot(selected_data['Tanggal'], selected_data[commodity])
         plt.xlabel("Date")
         plt.ylabel("Price")
         plt.title(f"{commodity} Price Over Time")
