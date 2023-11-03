@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 @st.cache_data
 def load_data():
     data = pd.read_csv("harga_real.csv")
-    #data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
+    data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
     return data
 
 # Sidebar: Select commodities
@@ -22,6 +22,7 @@ data = load_data()
 # Filter data based on selected commodities
 if len(commodities) > 0:
     selected_data = data[['Tanggal'] + commodities]
+    selected_data['Tanggal'] = selected_data['Tanggal'].dt.date  # Extract date portion
     selected_data = selected_data.sort_values(by='Tanggal', ascending=False)
 
     st.subheader("Harga Komoditas")
