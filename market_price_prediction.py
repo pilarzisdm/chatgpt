@@ -8,7 +8,7 @@ import io
 # Load your dataset (change 'your_dataset.csv' to your file's name)
 @st.cache_data
 def load_data():
-    data = pd.read_csv('data harga.csv')
+    data = pd.read_csv('data_harga.csv')
     return data
 
 data = load_data()
