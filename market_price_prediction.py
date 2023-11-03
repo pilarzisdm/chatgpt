@@ -33,18 +33,18 @@ if len(commodities) > 0:
 
     # Determine granularity multiplier
     if granularity == "Mingguan":
-        granularity_multiplier = pd.DateOffset(weeks=1)
+        granularity_multiplier = 7
     elif granularity == "Bulanan":
-        granularity_multiplier = pd.DateOffset(months=1)
+        granularity_multiplier = 30  # Approximate number of days in a month
     else:
-        granularity_multiplier = pd.DateOffset(years=1)
+        granularity_multiplier = 365  # Approximate number of days in a year
+
+    # Convert 'Tanggal' column to datetime.date
+    selected_data['Tanggal'] = selected_data['Tanggal'].apply(lambda x: x.date())
 
     # Calculate the date range for the selected granularity
     max_date = selected_data['Tanggal'].max()
-    min_date = max_date - granularity_multiplier
-
-    # Convert min_date to Timestamp for comparison
-    min_date = pd.Timestamp(min_date)
+    min_date = max_date - pd.DateOffset(days=granularity_multiplier)
 
     # Filter data for the selected granularity
     filtered_data = selected_data[selected_data['Tanggal'] >= min_date]
