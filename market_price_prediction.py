@@ -39,9 +39,11 @@ if len(commodities) > 0:
     ax.set_title("Harga Komoditas Antar Waktu")
     ax.legend()
     
-    # Add slider for x-axis limits
-    x_min, x_max = st.slider("Pilih Rentang Tanggal", min(selected_data['Tanggal']), max(selected_data['Tanggal']), (min(selected_data['Tanggal']), max(selected_data['Tanggal'])))
-    ax.set_xlim(pd.Timestamp(x_min), pd.Timestamp(x_max))  # Parse the limits as Timestamp objects
+    # Add slider for x-axis limits using the DataFrame index
+    x_min_idx, x_max_idx = st.slider("Pilih Rentang Tanggal", 0, len(selected_data) - 1, (0, len(selected_data) - 1))
+    x_min = selected_data['Tanggal'].iloc[x_min_idx]
+    x_max = selected_data['Tanggal'].iloc[x_max_idx]
+    ax.set_xlim(x_min, x_max)
     
     st.pyplot(fig)
     
