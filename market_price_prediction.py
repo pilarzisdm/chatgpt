@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from fbprophet import Prophet
+import numpy as np
 
 # Load the CSV data
-@st.cache_data
+@st.cache
 def load_data():
     data = pd.read_csv("harga_real.csv")
     data['Tanggal'] = pd.to_datetime(data['Tanggal'])  # Parse the date column as datetime
@@ -66,22 +66,16 @@ if len(commodities) > 0:
     st.subheader("Peramalan Harga Komoditas")
     forecasting_period = st.number_input("Masukan periode peramalan (dalam hari):", min_value=1, step=1)
     if st.button("Forecast"):
-        # Perform time series forecasting using Prophet
-        forecast_data = selected_data[['Tanggal', 'Beras']].rename(columns={'Tanggal': 'ds', 'Beras': 'y'})
-
-        # Create and fit the Prophet model
-        model = Prophet()
-        model.fit(forecast_data)
-
-        # Create a dataframe for future dates
-        future = model.make_future_dataframe(periods=forecasting_period)
+        # Perform simple moving average forecasting
+        forecast_data = filtered_data[['Tanggal'] + commodities]
         
-        # Make predictions
-        forecast = model.predict(future)
-
+        # Calculate the moving average for each selected commodity
+        for commodity in commodities:
+            forecast_data[commodity + ' (Forecast)'] = forecast_data[commodity].rolling(window=7).mean()
+        
         # Display the forecasted data
         st.subheader("Hasil Peramalan")
-        st.write(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
+        st.write(forecast_data)
 
 else:
     st.warning("Silakan pilih satu atau lebih komoditas.")
