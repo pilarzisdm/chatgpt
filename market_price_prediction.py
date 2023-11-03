@@ -48,7 +48,7 @@ if len(commodities) > 0:
     min_date = pd.Timestamp(min_date)
 
     # Filter data for the selected granularity
-    filtered_data = selected_data[selected_data['Tanggal'] >= min_date]
+    filtered_data = selected_data[selected_data['Tanggal'].apply(lambda x: x.date()) >= min_date.date()]
 
     # Plot selected commodities with the selected granularity
     st.subheader("Grafik Harga Komoditas")
